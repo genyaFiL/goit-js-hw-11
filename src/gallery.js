@@ -12,6 +12,7 @@ const pixabayAPI = new PixabayAPI();
 const onSearchFormSubmit = async event => {
   event.preventDefault();
 
+  pixabayAPI.page = 1;
   loadMoreBtnEl.classList.remove('is-hidden');
 
   const searchQuery = event.currentTarget.elements['searchQuery'].value.trim();
