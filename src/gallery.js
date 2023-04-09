@@ -13,7 +13,6 @@ const onSearchFormSubmit = async event => {
   event.preventDefault();
 
   pixabayAPI.page = 1;
-  loadMoreBtnEl.classList.remove('is-hidden');
 
   const searchQuery = event.currentTarget.elements['searchQuery'].value.trim();
 
@@ -32,13 +31,17 @@ const onSearchFormSubmit = async event => {
     const { data } = await pixabayAPI.fetchPhotos();
 
     if (!data.hits.length) {
-      Notiflix.Notify.failure(`Images not found!`);
+      galleryListEl.innerHTML = '';
+      Notiflix.Notify.failure(
+        `Sorry, there are no images matching your search query. Please try again.`
+      );
       return;
     }
 
     galleryListEl.innerHTML = createGalleryCards(data.hits);
     Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images`);
 
+    loadMoreBtnEl.classList.remove('is-hidden');
     if (data.totalHits <= pixabayAPI.page * pixabayAPI.perPage) {
       loadMoreBtnEl.classList.add('is-hidden');
     }
@@ -69,5 +72,10 @@ const onLoadMoreBtnClick = async () => {
   }
 };
 
+const onGalleryListClick = event => {
+  event.preventDefault();
+};
+
 searchFormEl.addEventListener('submit', onSearchFormSubmit);
 loadMoreBtnEl.addEventListener('click', onLoadMoreBtnClick);
+galleryListEl.addEventListener('click', onGalleryListClick);
